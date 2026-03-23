@@ -1,0 +1,32 @@
+name: Deploy to Namecheap
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      INDEXNOW_KEY: 0acd80c39fd64fff9872623bd90a7dde
+      SITE_HOST: ashleylegacy.com
+      SITE_BASE: https://ashleylegacy.com
+    steps:
+      - uses: actions/checkout@v4
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_PATH }}
+          protocol: ftp
+          port: 21
+
+      - name: Notify IndexNow
+        run: |
+          set -e
+          curl -sS -X POST "https://api.indexnow.org/indexnow" \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            -d "{\"host\":\"${SITE_HOST}\",\"key\":\"${INDEXNOW_KEY}\",\"keyLocation\":\"${SITE_BASE}/${INDEXNOW_KEY}.txt\",\"urlList\":[\"${SITE_BASE}/\",\"${SITE_BASE}/sitemap.xml\"]}"
