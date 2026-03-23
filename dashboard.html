@@ -119,6 +119,23 @@ body{ font-family:var(--font-sans); background:var(--color-background-primary); 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 </head>
 <body>
+
+<nav class="ashley-nav" style="margin-bottom:0;">
+  <a href="/dashboard.html" class="ashley-wordmark" style="text-decoration:none;">
+    <div class="ashley-wordmark-icon">A</div>
+    <div>
+      <div class="ashley-wordmark-name">Ashley</div>
+      <div class="ashley-wordmark-sub">Command</div>
+    </div>
+  </a>
+  <ul class="ashley-nav-links">
+    <li><a href="https://richiest.com" target="_blank">Richiest</a></li>
+    <li><a href="https://goalsetting.online" target="_blank">Goalsetting</a></li>
+    <li><a href="https://ashleyinsights.com" target="_blank">Insights</a></li>
+    <li><a href="#" onclick="sessionStorage.removeItem('ashley_auth');window.location.replace('/');return false;" style="color:var(--ashley-text-3);">Sign out</a></li>
+  </ul>
+</nav>
+
 <div class="app">
   <div class="masthead">
     <div>
