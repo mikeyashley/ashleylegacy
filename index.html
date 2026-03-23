@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ashley — Sign In</title>
-  <link rel="stylesheet" href="/brand.css" />
+  <title>Ashley</title>
+  <meta name="description" content="Michael Ashley — investor, operator, builder." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script>
-    // Already authenticated? Skip login
     if (sessionStorage.getItem('ashley_auth') === '1') {
       window.location.replace('/dashboard.html');
     }
@@ -15,17 +17,13 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0e0e10;
-      --surface:   #18181b;
-      --border:    #2a2a2f;
-      --muted:     #71717a;
-      --subtle:    #3f3f46;
-      --text:      #fafafa;
-      --text-2:    #a1a1aa;
-      --accent:    #4f8ef7;
-      --accent-h:  #3b7de8;
-      --error:     #f87171;
-      --radius:    12px;
+      --bg:       #0e0e10;
+      --surface:  #18181b;
+      --border:   #2a2a2f;
+      --muted:    #71717a;
+      --text-2:   #a1a1aa;
+      --text:     #fafafa;
+      --accent:   #4f8ef7;
     }
 
     html, body {
@@ -39,82 +37,180 @@
     body {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
       min-height: 100vh;
-      padding: 1.5rem;
     }
 
-    /* WORDMARK */
+    /* ── NAV ── */
+    nav {
+      padding: 1.375rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
     .wordmark {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 2.5rem;
+      text-decoration: none;
     }
     .wordmark-icon {
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       background: var(--accent);
-      border-radius: 8px;
+      border-radius: 7px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 17px;
-      font-weight: 600;
+      font-size: 15px;
+      font-weight: 700;
       color: #fff;
-      letter-spacing: -0.02em;
+      flex-shrink: 0;
     }
-    .wordmark-text {
-      font-size: 1.125rem;
+    .wordmark-name {
+      font-size: 0.9375rem;
       font-weight: 600;
-      letter-spacing: -0.02em;
       color: var(--text);
-    }
-    .wordmark-sub {
-      font-size: 0.7rem;
-      font-weight: 400;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-top: 1px;
+      letter-spacing: -0.02em;
     }
 
-    /* CARD */
-    .card {
+    /* ── HERO ── */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6rem 2rem 3rem;
+      max-width: 760px;
+      margin: 0 auto;
       width: 100%;
-      max-width: 380px;
-      background: var(--surface);
+    }
+    .hero-tag {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      line-height: 1.08;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+    .hero p {
+      font-size: 1.0625rem;
+      color: var(--text-2);
+      line-height: 1.75;
+      max-width: 520px;
+      margin-bottom: 3rem;
+    }
+
+    /* ── CARDS ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1px;
+      background: var(--border);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 2rem;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .card {
+      background: var(--surface);
+      padding: 1.375rem 1.5rem;
+      text-decoration: none;
+      transition: background 0.18s;
+    }
+    .card:hover { background: #1f1f23; }
+    .card-tag {
+      font-size: 0.675rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
     }
     .card-title {
-      font-size: 1.125rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--text);
       margin-bottom: 0.375rem;
+      letter-spacing: -0.01em;
     }
-    .card-sub {
+    .card-desc {
       font-size: 0.8125rem;
       color: var(--text-2);
-      margin-bottom: 1.75rem;
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
-    /* FORM */
-    .field {
-      margin-bottom: 1rem;
+    /* ── FOOTER ── */
+    footer {
+      padding: 1.75rem 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
-    label {
+    .footer-copy {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .footer-signin {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+    .footer-signin:hover { opacity: 1; }
+
+    /* ── LOGIN MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 360px;
+      position: relative;
+    }
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.3rem;
+    }
+    .modal-sub {
+      font-size: 0.8125rem;
+      color: var(--text-2);
+      margin-bottom: 1.5rem;
+    }
+    .modal label {
       display: block;
       font-size: 0.75rem;
       font-weight: 500;
       color: var(--text-2);
       margin-bottom: 0.375rem;
-      letter-spacing: 0.01em;
     }
-    input[type="password"] {
+    .modal input[type="password"] {
       width: 100%;
       padding: 0.6875rem 0.875rem;
       background: var(--bg);
@@ -125,30 +221,19 @@
       font-size: 0.9375rem;
       outline: none;
       transition: border-color 0.15s;
+      margin-bottom: 0.25rem;
       letter-spacing: 0.05em;
     }
-    input[type="password"]:focus {
-      border-color: var(--accent);
-    }
-    input[type="password"]::placeholder {
-      color: var(--subtle);
-      letter-spacing: 0;
-    }
-
-    /* ERROR */
-    .error-msg {
-      display: none;
+    .modal input[type="password"]:focus { border-color: var(--accent); }
+    .modal-error {
       font-size: 0.75rem;
-      color: var(--error);
-      margin-top: 0.375rem;
+      color: #f87171;
+      min-height: 1.2em;
+      margin-bottom: 0.75rem;
     }
-    .error-msg.show { display: block; }
-
-    /* BUTTON */
-    button {
+    .modal-btn {
       width: 100%;
-      margin-top: 0.5rem;
-      padding: 0.75rem;
+      padding: 0.6875rem;
       background: var(--accent);
       color: #fff;
       border: none;
@@ -157,100 +242,154 @@
       font-size: 0.9375rem;
       font-weight: 500;
       cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
-      letter-spacing: -0.01em;
+      transition: background 0.15s;
     }
-    button:hover { background: var(--accent-h); }
-    button:active { transform: scale(0.98); }
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    /* FOOTER */
-    .footer {
-      margin-top: 2rem;
-      font-size: 0.75rem;
+    .modal-btn:hover { background: #3b7de8; }
+    .modal-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
       color: var(--muted);
-      text-align: center;
+      font-size: 1.125rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: color 0.15s;
     }
+    .modal-close:hover { color: var(--text); }
 
-    /* SHAKE */
     @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-6px); }
-      40%, 80% { transform: translateX(6px); }
+      0%,100% { transform: translateX(0); }
+      20%,60%  { transform: translateX(-6px); }
+      40%,80%  { transform: translateX(6px); }
     }
     .shake { animation: shake 0.35s ease; }
+
+    @media (max-width: 600px) {
+      nav { padding: 1.125rem 1.25rem; }
+      .hero { padding: 4rem 1.25rem 2.5rem; }
+      footer { padding: 1.25rem; }
+    }
   </style>
 </head>
 <body>
 
-  <div class="ashley-wordmark">
-    <div class="ashley-wordmark-icon">A</div>
-    <div>
-      <div class="ashley-wordmark-name">Ashley</div>
-      <div class="ashley-wordmark-sub">Command</div>
+  <nav>
+    <a href="/" class="wordmark">
+      <div class="wordmark-icon">A</div>
+      <div class="wordmark-name">Ashley</div>
+    </a>
+  </nav>
+
+  <main class="hero">
+    <p class="hero-tag">Michael Ashley</p>
+    <h1>Investor.<br>Operator.<br>Builder.</h1>
+    <p>
+      Building long-term wealth through real estate, equities, and digital businesses.
+      Writing about capital allocation, goal systems, and financial independence.
+    </p>
+
+    <div class="cards">
+      <a class="card" href="https://richiest.com" target="_blank">
+        <p class="card-tag">Investing</p>
+        <p class="card-title">Richiest.com</p>
+        <p class="card-desc">Retirement income, ETF allocation, and real estate investing.</p>
+      </a>
+      <a class="card" href="https://goalsetting.online" target="_blank">
+        <p class="card-tag">Planning</p>
+        <p class="card-title">Goalsetting.online</p>
+        <p class="card-desc">AI-assisted planning for people managing multiple priorities.</p>
+      </a>
+      <a class="card" href="https://ashleyinsights.com" target="_blank">
+        <p class="card-tag">Consulting</p>
+        <p class="card-title">Ashley Insights</p>
+        <p class="card-desc">AI implementation for banks and financial services firms.</p>
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    <p class="footer-copy">© 2026 Michael Ashley</p>
+    <a href="#" class="footer-signin" id="signinLink">Sign in</a>
+  </footer>
+
+  <!-- LOGIN MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="loginModal">
+      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+      <p class="modal-title">Welcome back</p>
+      <p class="modal-sub">Enter your passphrase to continue.</p>
+      <form id="loginForm" autocomplete="off">
+        <label for="pass">Passphrase</label>
+        <input id="pass" type="password" placeholder="••••••••••" autocomplete="current-password" />
+        <p class="modal-error" id="errorMsg"></p>
+        <button class="modal-btn" type="submit" id="submitBtn">Continue →</button>
+      </form>
     </div>
   </div>
 
-  <div class="card" id="loginCard">
-    <p class="card-title">Welcome back</p>
-    <p class="card-sub">Sign in to access your dashboard.</p>
-
-    <form id="loginForm" autocomplete="off">
-      <div class="field">
-        <label for="pass">Passphrase</label>
-        <input
-          id="pass"
-          type="password"
-          placeholder="Enter passphrase"
-          autofocus
-          autocomplete="current-password"
-        />
-        <p class="error-msg" id="errorMsg">Incorrect passphrase. Try again.</p>
-      </div>
-      <button type="submit" id="submitBtn">Sign In →</button>
-    </form>
-  </div>
-
-  <p class="footer">Ashley Command · Private</p>
-
   <script>
-    // ── CHANGE THIS PASSPHRASE ──────────────────────────────────────────
     const PASSPHRASE = 'ashley2026';
-    // ───────────────────────────────────────────────────────────────────
 
-    const form    = document.getElementById('loginForm');
-    const input   = document.getElementById('pass');
-    const errMsg  = document.getElementById('errorMsg');
-    const card    = document.getElementById('loginCard');
-    const btn     = document.getElementById('submitBtn');
+    const overlay  = document.getElementById('modalOverlay');
+    const modal    = document.getElementById('loginModal');
+    const form     = document.getElementById('loginForm');
+    const input    = document.getElementById('pass');
+    const errMsg   = document.getElementById('errorMsg');
+    const btn      = document.getElementById('submitBtn');
+
+    document.getElementById('signinLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      overlay.classList.add('open');
+      setTimeout(function(){ input.focus(); }, 50);
+    });
+
+    document.getElementById('modalClose').addEventListener('click', function() {
+      overlay.classList.remove('open');
+      input.value = '';
+      errMsg.textContent = '';
+    });
+
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) {
+        overlay.classList.remove('open');
+        input.value = '';
+        errMsg.textContent = '';
+      }
+    });
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
       btn.disabled = true;
-
       setTimeout(function() {
         if (input.value === PASSPHRASE) {
           sessionStorage.setItem('ashley_auth', '1');
           window.location.replace('/dashboard.html');
         } else {
-          errMsg.classList.add('show');
-          card.classList.add('shake');
+          errMsg.textContent = 'Incorrect passphrase.';
+          modal.classList.add('shake');
           input.value = '';
           input.focus();
-          card.addEventListener('animationend', function() {
-            card.classList.remove('shake');
+          modal.addEventListener('animationend', function() {
+            modal.classList.remove('shake');
           }, { once: true });
         }
         btn.disabled = false;
-      }, 200);
+      }, 180);
     });
 
-    input.addEventListener('input', function() {
-      errMsg.classList.remove('show');
+    input.addEventListener('input', function() { errMsg.textContent = ''; });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        overlay.classList.remove('open');
+        input.value = '';
+        errMsg.textContent = '';
+      }
     });
   </script>
 

@@ -121,19 +121,14 @@ body{ font-family:var(--font-sans); background:var(--color-background-primary); 
 <body>
 
 <nav class="ashley-nav" style="margin-bottom:0;">
-  <a href="/dashboard.html" class="ashley-wordmark" style="text-decoration:none;">
+  <a href="/" class="ashley-wordmark" style="text-decoration:none;">
     <div class="ashley-wordmark-icon">A</div>
     <div>
       <div class="ashley-wordmark-name">Ashley</div>
       <div class="ashley-wordmark-sub">Command</div>
     </div>
   </a>
-  <ul class="ashley-nav-links">
-    <li><a href="https://richiest.com" target="_blank">Richiest</a></li>
-    <li><a href="https://goalsetting.online" target="_blank">Goalsetting</a></li>
-    <li><a href="https://ashleyinsights.com" target="_blank">Insights</a></li>
-    <li><button onclick="sessionStorage.removeItem('ashley_auth');window.location.replace('/');" style="background:transparent;border:1px solid var(--ashley-border-2);color:var(--ashley-text-2);font-family:var(--ashley-font);font-size:0.8125rem;font-weight:400;padding:5px 12px;border-radius:6px;cursor:pointer;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='#222226';this.style.color='#fafafa'" onmouseout="this.style.background='transparent';this.style.color='var(--ashley-text-2)'">Sign out</button></li>
-  </ul>
+  <button onclick="sessionStorage.removeItem('ashley_auth');window.location.replace('/');" style="background:transparent;border:1px solid var(--ashley-border-2);color:var(--ashley-text-2);font-family:var(--ashley-font);font-size:0.8125rem;font-weight:400;padding:5px 14px;border-radius:6px;cursor:pointer;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='#222226';this.style.color='#fafafa'" onmouseout="this.style.background='transparent';this.style.color='var(--ashley-text-2)'">Sign out</button>
 </nav>
 
 <div class="app">
