@@ -120,16 +120,7 @@ body{ font-family:var(--font-sans); background:var(--color-background-primary); 
 </head>
 <body>
 
-<nav class="ashley-nav" style="margin-bottom:0;">
-  <a href="/" class="ashley-wordmark" style="text-decoration:none;">
-    <div class="ashley-wordmark-icon">A</div>
-    <div>
-      <div class="ashley-wordmark-name">Ashley</div>
-      <div class="ashley-wordmark-sub">Command</div>
-    </div>
-  </a>
-  <button onclick="sessionStorage.removeItem('ashley_auth');window.location.replace('/');" style="background:transparent;border:1px solid var(--ashley-border-2);color:var(--ashley-text-2);font-family:var(--ashley-font);font-size:0.8125rem;font-weight:400;padding:5px 14px;border-radius:6px;cursor:pointer;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='#222226';this.style.color='#fafafa'" onmouseout="this.style.background='transparent';this.style.color='var(--ashley-text-2)'">Sign out</button>
-</nav>
+
 
 <div class="app">
   <div class="masthead">
@@ -511,5 +502,9 @@ document.addEventListener('visibilitychange', () => {
   if (!document.hidden) refreshBridgeState();
 });
 </script>
+
+<footer style="margin-top:2rem;padding:1.25rem 1.5rem;border-top:1px solid #2a2a2f;text-align:right;">
+  <button onclick="sessionStorage.removeItem('ashley_auth');window.location.replace('/');" style="background:none;border:none;font-family:inherit;font-size:0.75rem;color:#52525b;cursor:pointer;transition:color 0.15s;" onmouseover="this.style.color='#a1a1aa'" onmouseout="this.style.color='#52525b'">Sign out</button>
+</footer>
 </body>
 </html>
