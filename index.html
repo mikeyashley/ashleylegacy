@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Legacy OS</title>
+<style>
+:root {
+ --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+ --color-text-primary: #1a1a18;
+ --color-text-secondary: #73726c;
+ --color-text-tertiary: #9c9a92;
+ --color-background-primary: #ffffff;
+ --color-background-secondary: #f5f4f0;
+ --color-border-tertiary: rgba(0,0,0,0.12);
+ --color-border-secondary: rgba(0,0,0,0.22);
+ --border-radius-md: 8px;
+ --border-radius-lg: 12px;
+}
+@media (prefers-color-scheme: dark) {
+ :root {
+ --color-text-primary: #e8e6de;
+ --color-text-secondary: #9c9a92;
+ --color-text-tertiary: #73726c;
+ --color-background-primary: #1c1c1a;
+ --color-background-secondary: #252523;
+ --color-border-tertiary: rgba(255,255,255,0.12);
+ --color-border-secondary: rgba(255,255,255,0.22);
+ }
+}
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{ font-family:var(--font-sans); background:var(--color-background-primary); color:var(--color-text-primary); padding:16px; max-width:900px; margin:0 auto; }
+.app{ padding:.75rem 0 2.5rem; }
+.masthead{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; padding-bottom:12px; border-bottom:.5px solid var(--color-border-tertiary); flex-wrap:wrap; gap:8px; }
+.masthead-title{ font-size:16px; font-weight:500; }
+.masthead-sub{ font-size:11px; color:var(--color-text-secondary); margin-top:2px; }
+.masthead-r{ display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+.badge{ display:inline-block; font-size:10px; font-weight:500; padding:2px 7px; border-radius:3px; white-space:nowrap; }
+.b-green{background:#EAF3DE;color:#3B6D11;} .b-blue{background:#E6F1FB;color:#185FA5;}
+.b-amber{background:#FAEEDA;color:#854F0B;} .b-red{background:#FCEBEB;color:#A32D2D;}
+.b-gray{background:#F1EFE8;color:#5F5E5A;} .b-purple{background:#EEEDFE;color:#3C3489;}
+.b-teal{background:#E1F5EE;color:#085041;}
+.mission-grid{ display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px; margin-bottom:16px; }
+@media(max-width:600px) { .mission-grid { grid-template-columns:repeat(4,minmax(0,1fr)); } }
+.mission-tile{ border:.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-md); padding:8px 7px; cursor:pointer; text-align:center; }
+.mission-tile.active { border-width:1.5px; }
+.mt-icon{ font-size:18px; margin-bottom:4px; }
+.mt-num{ font-size:9px; color:var(--color-text-secondary); margin-bottom:2px; }
+.mt-label{ font-size:10px; font-weight:500; line-height:1.3; }
+.mt-status{ font-size:9px; margin-top:4px; font-weight:500; }
+.mt-bar{ height:3px; border-radius:2px; margin-top:5px; background:var(--color-background-secondary); overflow:hidden; }
+.mt-fill{ height:100%; border-radius:2px; }
+.section { display:none; }
+.section.active { display:block; }
+.mission-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;padding:10px 12px;border:.5px solid var(--color-border-tertiary);border-radius:10px;background:var(--color-background-secondary)}
+.mission-head-icon{font-size:20px;line-height:1}
+.mission-head-title{font-size:14px;font-weight:600;color:var(--color-text-primary)}
+.mission-head-tagline{font-size:11px;color:var(--color-text-secondary);line-height:1.5;margin-top:3px}
+.mission-head-tagline.legacy{font-size:12px;color:var(--color-text-primary);font-weight:500;line-height:1.55}
+.mission-score{margin-left:auto;text-align:right;font-size:11px;font-weight:600}
+.kpi-strip { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin-bottom:12px; }
+@media(max-width:500px) { .kpi-strip { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+.kpi { background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:9px 11px; cursor:pointer; }
+.kpi:hover{outline:1px solid var(--color-border-secondary)}
+.kpi-l { font-size:10px; color:var(--color-text-secondary); margin-bottom:2px; }
+.top-panels{display:grid;grid-template-columns:1.5fr 1fr;gap:8px;margin-bottom:12px}
+@media(max-width:700px){.top-panels{grid-template-columns:1fr}}
+.big3-item,.trend-row,.feed-row{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:.5px solid var(--color-border-tertiary);font-size:11px}
+.big3-item:last-child,.trend-row:last-child,.feed-row:last-child{border-bottom:none}
+.spark{height:6px;background:var(--color-background-secondary);border-radius:10px;overflow:hidden;margin-top:4px}.spark>span{display:block;height:100%;background:#185FA5}
+.drawer{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;padding:20px;z-index:99}
+.drawer.open{display:flex}
+.drawer-card{background:var(--color-background-primary);border:1px solid var(--color-border-secondary);border-radius:12px;max-width:520px;width:100%;padding:14px}
+.drawer-title{font-weight:600;margin-bottom:6px}
+.drawer-sub{font-size:12px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:8px}
+.kpi-v { font-size:15px; font-weight:500; }
+.kpi-s { font-size:10px; margin-top:2px; }
+.card { background:var(--color-background-primary); border:.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:11px 13px; margin-bottom:10px; }
+.card-h { font-size:12px; font-weight:500; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; gap:6px; }
+.row { display:flex; align-items:flex-start; gap:8px; padding:7px 0; border-bottom:.5px solid var(--color-border-tertiary); }
+.row:last-child { border-bottom:none; }
+.row-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:3px; }
+.row-body { flex:1; }
+.row-title { font-size:11px; font-weight:500; }
+.row-sub { font-size:10px; color:var(--color-text-secondary); margin-top:2px; line-height:1.5; }
+.row-action { font-size:10px; font-weight:500; padding:2px 8px; border-radius:3px; flex-shrink:0; white-space:nowrap; }
+.habit-row { display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:.5px solid var(--color-border-tertiary); flex-wrap:wrap; }
+.habit-row:last-child { border-bottom:none; }
+.habit-label { font-size:11px; flex:1; min-width:120px; }
+.habit-freq { font-size:10px; color:var(--color-text-secondary); width:70px; text-align:right; flex-shrink:0; }
+.check-dots { display:flex; gap:3px; }
+.dot-day { width:14px; height:14px; border-radius:3px; border:.5px solid var(--color-border-tertiary); cursor:pointer; }
+.dot-day.done { border-color:transparent; }
+.chat-area { border:.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg); padding:12px; min-height:180px; display:flex; flex-direction:column; gap:8px; margin-bottom:8px; max-height:300px; overflow-y:auto; }
+.msg { display:flex; gap:8px; align-items:flex-start; }
+.msg.user { flex-direction:row-reverse; }
+.av { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:500; flex-shrink:0; }
+.av.ai { background:#E6F1FB; color:#185FA5; }
+.av.user { background:#EAF3DE; color:#3B6D11; }
+.bubble { max-width:85%; padding:7px 11px; border-radius:10px; font-size:11px; line-height:1.6; }
+.bubble.ai { background:var(--color-background-secondary); border-radius:2px 10px 10px 10px; }
+.bubble.user { background:#E6F1FB; color:#0C447C; border-radius:10px 2px 10px 10px; }
+.bubble.thinking { color:var(--color-text-secondary); font-style:italic; }
+.input-row { display:flex; gap:6px; }
+.input-row input { flex:1; font-size:11px; padding:7px 10px; border-radius:var(--border-radius-md); border:.5px solid var(--color-border-tertiary); background:var(--color-background-secondary); color:var(--color-text-primary); font-family:var(--font-sans); }
+.input-row button { font-size:11px; padding:7px 13px; border-radius:var(--border-radius-md); border:.5px solid var(--color-border-secondary); background:transparent; color:var(--color-text-primary); cursor:pointer; white-space:nowrap; font-family:var(--font-sans); }
+.settings-fab{position:fixed;right:14px;bottom:14px;z-index:9999;border:.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);border-radius:16px;padding:8px 10px;font-size:11px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="masthead">
+    <div>
+      <div class="masthead-title">Legacy OS</div>
+      <div class="masthead-sub" id="masthead-date">Age 51 · 2026</div>
+    </div>
+    <div class="masthead-r">
+      <span class="badge b-gray" id="masthead-day"></span>
+      <span class="badge b-blue" id="week-num">Week — of 52</span>
+      <span class="badge b-amber">2026</span>
+      <span class="badge b-teal" id="sync-state">Live</span>
+    </div>
+  </div>
+
+  <div class="mission-grid" id="mission-tiles"></div>
+  <div class="top-panels" id="top-panels"></div>
+  <div id="sections"></div>
+</div>
+<button class="settings-fab" onclick="openSettings()" title="Ops Hub">⚙ Ops Hub</button>
+<div class="drawer" id="kpi-drawer" onclick="closeDrawer(event)">
+  <div class="drawer-card">
+    <div class="drawer-title" id="drawer-title">Sub-mission</div>
+    <div class="drawer-sub" id="drawer-sub">Details</div>
+    <div id="drawer-body" style="font-size:12px;line-height:1.6"></div>
+    <div style="margin-top:10px;text-align:right"><button onclick="document.getElementById('kpi-drawer').classList.remove('open')">Close</button></div>
+  </div>
+</div>
+
+<script>
+const missions = [
+ { id:'legacy', num:1, label:'Legacy', icon:'🏛', color:'#534AB7', bg:'#EEEDFE', score:35 },
+ { id:'health', num:2, label:'Health', icon:'💪', color:'#0F6E56', bg:'#E1F5EE', score:55 },
+ { id:'marriage', num:3, label:'Marriage', icon:'💍', color:'#993556', bg:'#FBEAF0', score:60 },
+ { id:'lily', num:4, label:'Lily', icon:'🌱', color:'#3B6D11', bg:'#EAF3DE', score:80 },
+ { id:'networth', num:5, label:'Net worth', icon:'📈', color:'#185FA5', bg:'#E6F1FB', score:72 },
+ { id:'restate', num:6, label:'Real est.', icon:'🏘', color:'#854F0B', bg:'#FAEEDA', score:65 },
+ { id:'equities', num:7, label:'Equities', icon:'📊', color:'#185FA5', bg:'#E6F1FB', score:50 },
+];
+
+let activeMission = 'legacy';
+let chatHistories = {};
+missions.forEach(m => chatHistories[m.id] = []);
+
+let bridgeState = { updatedAt:null, liquidity:{}, tasks:[], notes:[], biologicalScorecard:{} };
+let remindersState = { ok:false, items:[] };
+
+const habitData = {
+ health: [
+ { label:'8 hours of rest', freq:'Daily', days:[0,0,0,0,0,0,0] },
+ { label:'60 squats', freq:'Daily', days:[0,0,0,0,0,0,0] },
+ { label:'45 pushups (50 next Mon)', freq:'Daily', days:[0,0,0,0,0,0,0] },
+ { label:'5 min yoga/stretch', freq:'Daily', days:[0,0,0,0,0,0,0] },
+ ],
+ marriage: [
+ { label:'Date night / intentional time', freq:'Weekly', days:[0,0,0,0,0,0,0] },
+ { label:'No phone during meals', freq:'Daily', days:[0,0,0,0,0,0,0] },
+ { label:'Express appreciation', freq:'Daily', days:[0,0,0,0,0,0,0] },
+ ],
+ lily: [
+ { label:'Floor play / engaged time', freq:'Daily', days:[0,0,0,0,0,0,0] },
+ { label:'Read together', freq:'Daily', days:[0,0,0,0,0,0,0] },
+ { label:'Outdoor time', freq:'Daily', days:[0,0,0,0,0,0,0] },
+ { label:'Screen-free morning', freq:'Daily', days:[0,0,0,0,0,0,0] },
+ ],
+ legacy: [
+ { label:'20 minute quality time with daughter', freq:'Daily', days:[0,0,0,0,0,0,0] },
+ { label:'Daily devotional with wife', freq:'Daily', days:[0,0,0,0,0,0,0] },
+ ],
+};
+
+function toggleDay(missionId, habitIdx, dayIdx) {
+ habitData[missionId][habitIdx].days[dayIdx] ^= 1;
+ renderSection(activeMission);
+}
+
+function weekIndexFromDate(d) {
+  // UI week is Monday..Sunday (M,T,W,T,F,S,S)
+  return (d.getDay() + 6) % 7;
+}
+
+function syncHabitsFromReminders() {
+  const items = remindersState.items || [];
+  const todayIdx = weekIndexFromDate(new Date());
+
+  const hasDone = (keywords) => items.some((r) => {
+    const t = String(r.title || '').toLowerCase();
+    const done = !!(r.isCompleted || r.completed);
+    return done && keywords.some(k => t.includes(k));
+  });
+
+  const health = habitData.health || [];
+  const rest = health.find(h => String(h.label).toLowerCase().includes('8 hours of rest'));
+  const squats = health.find(h => String(h.label).toLowerCase().includes('squats'));
+  const pushups = health.find(h => String(h.label).toLowerCase().includes('pushups'));
+
+  if (rest) rest.days[todayIdx] = hasDone(['8 hours of rest']) ? 1 : 0;
+  if (squats) squats.days[todayIdx] = hasDone(['60 squats', 'squats']) ? 1 : 0;
+  if (pushups) pushups.days[todayIdx] = hasDone(['45 pushups', '50 pushups', 'pushups']) ? 1 : 0;
+
+  const legacy = habitData.legacy || [];
+  const daughter = legacy.find(h => String(h.label).toLowerCase().includes('daughter'));
+  const devotional = legacy.find(h => String(h.label).toLowerCase().includes('devotional'));
+
+  if (daughter) daughter.days[todayIdx] = hasDone(['20 minute quality time', 'quality time']) ? 1 : 0;
+  if (devotional) devotional.days[todayIdx] = hasDone(['daily devotional', 'devotional']) ? 1 : 0;
+}
+
+function getMissionTagline(id) {
+ return {
+ legacy: 'Build a family legacy where each generation grows stronger in character, wisdom, and stewardship—secure, resilient, and protected from harm.',
+ health: 'Maintain excellent personal health — 160 lbs, strength, longevity',
+ marriage: 'Maintain a healthy, intentional marriage',
+ lily: "Support Lily\'s physical, emotional, and intellectual development",
+ networth: 'Grow net worth 15%/yr — baseline $5,779,295 (12/15/2025) → $20M by age 60',
+ restate: 'Keep real estate holdings optimized and cash-flowing',
+ equities: 'Keep cash and equities working at maximum efficiency',
+ }[id] || '';
+}
+
+function getMissionStatement(id) {
+  if (id !== 'legacy') return '';
+  return `<div class="card"><div class="card-h">Family Mission Statement <span class="badge b-purple">Draft</span></div><div style="line-height:1.45;color:var(--color-text-primary);font-size:13px">We are building a multigenerational family legacy rooted in faith, character, wisdom, and stewardship.<br><br>We choose what is right over what is easy, grow stronger through discipline and learning, and protect one another with love, responsibility, and resilience.<br><br>We steward our health, relationships, resources, and opportunities so each generation is better prepared to serve, lead, and thrive.<br><br>Our home is a place of trust, gratitude, and purpose—where we honor God, care deeply for each other, and leave a meaningful foundation for those who come after us.</div></div>`;
+}
+
+function getRoadmapSection() {
+  const score = healthScore();
+  const reminderItems = remindersState.items || [];
+  const doneCount = reminderItems.filter(r => r.completed || r.isCompleted).length;
+  const habitNames = ['8 hours of rest','60 squats','pushups','45 pushups','50 pushups','Daily Devotional','20 minute quality time'];
+  const habitMatches = reminderItems.filter(r => {
+    const t = String(r.title || '').toLowerCase();
+    return habitNames.some(h => t.includes(h.toLowerCase()));
+  });
+  const habitDoneCount = habitMatches.filter(r => r.completed || r.isCompleted).length;
+
+  return `<div class="card"><div class="card-h">Daily Feed <span class="badge b-gray">Today</span></div>
+      <div class="feed-row"><span>Health system</span><span>${score?`Score ${score}`:'Waiting for bio data'}</span></div>
+      <div class="feed-row"><span>Bridge sync</span><span>${bridgeState.updatedAt || 'Not synced yet'}</span></div>
+      <div class="feed-row"><span>Apple Reminders sync</span><span>${remindersState.ok ? `Connected (${doneCount}/${reminderItems.length} done)` : 'Unavailable'}</span></div>
+      <div class="feed-row"><span>Tracked daily habits</span><span>${habitDoneCount}/${habitMatches.length} done</span></div>
+    </div>
+    <div class="card"><div class="card-h">Change Control <span class="badge b-blue">Discipline</span></div>
+      <div class="row"><div class="row-dot" style="background:#185FA5"></div><div class="row-body"><div class="row-title">All dashboard changes require explicit commit message</div><div class="row-sub">No silent edits. Every change is traceable with intent.</div></div><div class="row-action" style="background:#E6F1FB;color:#0F4C81">Commit each change</div></div>
+      <div class="row"><div class="row-dot" style="background:#BA7517"></div><div class="row-body"><div class="row-title">One source of truth per domain</div><div class="row-sub">Reminders for execution, Mission Control for visibility, memory docs for policy.</div></div><div class="row-action" style="background:#FAEEDA;color:#854F0B">Avoid duplicate systems</div></div>
+      <div class="row"><div class="row-dot" style="background:#534AB7"></div><div class="row-body"><div class="row-title">Weekly review gate</div><div class="row-sub">Promote only changes that survived 1 week of daily use.</div></div><div class="row-action" style="background:#EEEDFE;color:#3C3489">Review on Sunday</div></div>
+    </div>
+    <div class="card"><div class="card-h">Roadmap <span class="badge b-green">Next 3</span></div>
+      <div class="row"><div class="row-dot" style="background:#1D9E75"></div><div class="row-body"><div class="row-title">R1: Mission-to-reminder mapping audit</div><div class="row-sub">Ensure each daily habit on tabs has a mapped reminder keyword.</div></div><div class="row-action" style="background:#EAF3DE;color:#3B6D11">This week</div></div>
+      <div class="row"><div class="row-dot" style="background:#185FA5"></div><div class="row-body"><div class="row-title">R2: Completion timestamp + streaks</div><div class="row-sub">Add today completion time and 7-day streak per key habit.</div></div><div class="row-action" style="background:#E6F1FB;color:#0F4C81">Next</div></div>
+      <div class="row"><div class="row-dot" style="background:#854F0B"></div><div class="row-body"><div class="row-title">R3: Sunday planning checklist automation</div><div class="row-sub">Auto-populate weekly review and planning checklist from mission state.</div></div><div class="row-action" style="background:#FAEEDA;color:#854F0B">Backlog</div></div>
+    </div>`;
+}
+
+function getKPIStrip(id) {
+ const b = bridgeState.biologicalScorecard || {};
+ const kpis = {
+ legacy: [{l:'Character',v:'Build',s:'Values, discipline, stewardship',c:'#534AB7'},{l:'Governance & Strategy',v:'Design',s:'Family governance + roadmap',c:'#185FA5'},{l:'Tax',v:'Optimize',s:'After-tax compounding engine',c:'#0F6E56'},{l:'Protection',v:'Protect',s:'Continuity + protection from harm',c:'#854F0B'}],
+ health: [
+   {l:'Recovery',v:(b.sleepHours ?? 'NA') + ' hrs',s:'Sleep / stress / readiness',c:'#0F6E56'},
+   {l:'Body Comp & Metabolic',v:`Waist ${b.waistInches ?? 'NA'} in`,s:'Weight, waist, glucose',c:'#185FA5'},
+   {l:'Performance',v:`P ${b.pushups ?? 'NA'} · S ${b.squats ?? 'NA'}`,s:'Strength + cardio capacity',c:'#534AB7'},
+   {l:'Durability',v:`Balance ${b.balanceSeconds ?? 'NA'}s`,s:'Mobility, pain, movement quality',c:'#854F0B'}
+ ],
+ marriage: [{l:'Connection',v:'Build',s:'Trust, warmth, partnership',c:'#993556'},{l:'Communication',v:'Strengthen',s:'Repair loops + clear asks',c:'#BA7517'},{l:'Shared Rhythm',v:'Protect',s:'Daily/weekly rituals',c:'#534AB7'},{l:'Stability',v:'Secure',s:'Home, planning, protection',c:'#1D9E75'}],
+ lily: [{l:'Attachment',v:'Nurture',s:'Safety, love, co-regulation',c:'#3B6D11'},{l:'Development',v:'Guide',s:'Physical, emotional, intellectual',c:'#185FA5'},{l:'Environment',v:'Shape',s:'Montessori-ready home + routines',c:'#BA7517'},{l:'Parent Presence',v:'Prioritize',s:'Daily engaged time',c:'#534AB7'}],
+ networth: [{l:'Capital Growth',v:'Compound',s:'15% annual target',c:'#185FA5'},{l:'Cash Flow',v:'Expand',s:'Monthly free-cash engine',c:'#0F6E56'},{l:'Capital Allocation',v:'Optimize',s:'Deploy to highest ROI',c:'#BA7517'},{l:'Risk Control',v:'Preserve',s:'Protect downside + liquidity',c:'#854F0B'}],
+ restate: [{l:'Operations',v:'Stabilize',s:'Occupancy, collections, execution',c:'#1D9E75'},{l:'Value-Add',v:'Execute',s:'Refurbs on time/on budget',c:'#BA7517'},{l:'Portfolio Quality',v:'Upgrade',s:'Asset quality + tenant quality',c:'#185FA5'},{l:'Expansion',v:'Build',s:'BTR pipeline for 2027+',c:'#854F0B'}],
+ equities: [{l:'Core Holdings',v:'Protect',s:'SPY long-duration compounding',c:'#1D9E75'},{l:'Income Strategy',v:'Activate',s:'Cash-secured puts on conviction names',c:'#E24B4A'},{l:'Tactical Allocation',v:'Refine',s:'Retirement risk-on band',c:'#185FA5'},{l:'Risk Discipline',v:'Enforce',s:'Sizing, rules, and review cadence',c:'#854F0B'}],
+ };
+ const items = kpis[id] || [];
+ return `<div class="kpi-strip">${items.map(k=>`<div class="kpi" onclick="openKpi('${id}','${String(k.l).replace(/'/g,"&#39;")}','${String(k.v).replace(/'/g,"&#39;")}','${String(k.s).replace(/'/g,"&#39;")}')"><div class="kpi-l">${k.l}</div><div class="kpi-v" style="color:${k.c};font-size:14px;">${k.v}</div><div class="kpi-s" style="color:var(--color-text-secondary);">${k.s}</div></div>`).join('')}</div>`;
+}
+
+function getSignals(id) {
+ const b = bridgeState.biologicalScorecard || {};
+ const sigs = {
+ legacy:[
+ {dot:'#1D9E75',title:'Parent presence is today\'s highest-ROI legacy action',sub:'The 20-minute focused block with Lily compounds attachment, language, and trust.',action:'Protect 20 minutes today',ac:'#EAF3DE',tc:'#3B6D11'},
+ {dot:'#0F6E56',title:'Marriage culture sets the family operating system',sub:'Daily devotional keeps values lived, not just stated.',action:'Complete devotional today',ac:'#E1F5EE',tc:'#085041'},
+ {dot:'#BA7517',title:'Mission statement is drafted — now operationalize it',sub:'A mission only works when reviewed and used in decisions each week.',action:'Set Sunday mission review',ac:'#FAEEDA',tc:'#854F0B'},
+ ],
+ health:[
+ {dot:'#0F6E56',title:'Biological Scorecard is live',sub:`Waist ${b.waistInches ?? 'NA'} in · Zone2 ${b.zone2MinutesWeek ?? 'NA'} min/wk · Balance ${b.balanceSeconds ?? 'NA'} sec`,action:'Update /bio weekly',ac:'#E1F5EE',tc:'#085041'},
+ {dot:'#BA7517',title:'~10 lbs from target weight',sub:'160 lbs target · 1 lb/week sustainable loss',action:'Set weekly weigh-in',ac:'#FAEEDA',tc:'#854F0B'},
+ {dot:'#534AB7',title:'Longevity framing — 40-year project',sub:'Health consistency = more compounding time.',action:'Stay consistent',ac:'#EEEDFE',tc:'#3C3489'},
+ ],
+ marriage:[{dot:'#BA7517',title:'Intentional investment needed',sub:'Marriage needs active management.',action:'Schedule date',ac:'#FAEEDA',tc:'#854F0B'}],
+ lily:[{dot:'#1D9E75',title:'Language explosion window',sub:'Talk, narrate, read daily.',action:'Read 3 books',ac:'#EAF3DE',tc:'#3B6D11'}],
+ networth:[{dot:'#185FA5',title:'2026 plan assumptions loaded (real estate + SEO)',sub:'723 net +$125k; 725 net +$108k; 820 Grandon net +$20k; 4th rental net +$110k; Barn net +$20k; Richiest +$30k; Goalsetting +$30k = +$443k fixed.',action:'Track monthly actuals',ac:'#E6F1FB',tc:'#0F4C81'},{dot:'#E24B4A',title:'Gap to 15% target remains +$423,894',sub:'15% on $5,779,295 = $866,894; fixed projects cover $443,000. Put selling + market returns must close the remaining gap.',action:'Activate options + allocation',ac:'#FCEBEB',tc:'#A32D2D'}],
+ restate:[{dot:'#E24B4A',title:'723 Zion — lease immediately',sub:'Costs money while vacant.',action:'List now',ac:'#FCEBEB',tc:'#A32D2D'}],
+ equities:[{dot:'#E24B4A',title:'Put selling not activated',sub:'Target $5,800–8,700/mo premium.',action:'Open IRA options',ac:'#FCEBEB',tc:'#A32D2D'}],
+ };
+ const items = sigs[id] || [];
+ return `<div class="card"><div class="card-h">Signals <span class="badge b-gray">Act on these</span></div>${items.map(s=>`<div class="row"><div class="row-dot" style="background:${s.dot}"></div><div class="row-body"><div class="row-title">${s.title}</div><div class="row-sub">${s.sub}</div></div><div class="row-action" style="background:${s.ac};color:${s.tc};">${s.action}</div></div>`).join('')}</div>`;
+}
+
+function getHabits(id, c) {
+ const habits = habitData[id];
+ if (!habits) return '';
+ const days = ['M','T','W','T','F','S','S'];
+ return `<div class="card"><div class="card-h">Weekly habits <span class="badge b-gray">This week</span></div>${habits.map((h,hi)=>`<div class="habit-row"><div class="habit-label">${h.label}</div><div class="habit-freq">${h.freq}</div><div class="check-dots">${h.days.map((d,di)=>`<div class="dot-day ${d?'done':''}" style="${d?`background:${c};border-color:transparent;`:''}" title="${days[di]}" onclick="toggleDay('${id}',${hi},${di})"></div>`).join('')}</div></div>`).join('')}</div>`;
+}
+
+function getChatBox(id) {
+ const m = missions.find(x=>x.id===id);
+ return `<div class="card"><div class="card-h">Talk to Legacy OS — Mission ${m?.num} <span class="badge b-purple">Local</span></div><div class="chat-area" id="chat-${id}"><div class="msg"><div class="av ai">OC</div><div class="bubble ai">${getOpeningLine(id)}</div></div></div><div class="input-row"><input type="text" id="inp-${id}" placeholder="Update ${id}..." onkeydown="if(event.key==='Enter')sendChat('${id}')"><button onclick="sendChat('${id}')">Send ↗</button></div></div>`;
+}
+
+function getOpeningLine(id) {
+ return {
+ legacy: "What does your multigenerational legacy look like in 30 years?",
+ health: "Where are you with training and recovery right now?",
+ marriage: "What\'s one thing working and one needing attention this week?",
+ lily: "What\'s new with Lily this week?",
+ networth: "What\'s blocking the highest-ROI financial action right now?",
+ restate: "What\'s the holdout before listing 723 Zion?",
+ equities: "Have you started the IRA options setup yet?",
+ }[id] || "What\'s the update?";
+}
+
+function buildSection(m) {
+ const c = m.color;
+ const scoreColor = m.score>=70 ? '#1D9E75' : m.score>=50 ? '#BA7517' : '#E24B4A';
+ const taglineClass = m.id==='legacy' ? 'mission-head-tagline legacy' : 'mission-head-tagline';
+ return `<div class="mission-head"><span class="mission-head-icon">${m.icon}</span><div><div class="mission-head-title">Mission ${m.num} — ${m.label}</div><div class="${taglineClass}">${getMissionTagline(m.id)}</div></div><div class="mission-score" style="color:${scoreColor}">${m.score}% on track</div></div>${getKPIStrip(m.id)}${getSignals(m.id)}${habitData[m.id] ? getHabits(m.id, c) : ''}${getMissionStatement(m.id)}`;
+}
+
+function healthScore(){
+  const b=bridgeState.biologicalScorecard||{}; let s=0,n=0;
+  if(b.sleepHours!=null){s += b.sleepHours>=7.5?100:60; n++;}
+  if(b.pushups!=null){s += b.pushups>=50?100:b.pushups>=45?85:60; n++;}
+  if(b.squats!=null){s += b.squats>=60?100:70; n++;}
+  if(b.waistInches!=null){s += b.waistInches<=36?100:70; n++;}
+  if(b.balanceSeconds!=null){s += b.balanceSeconds>=45?100:70; n++;}
+  return n?Math.round(s/n):null;
+}
+
+function renderTopPanels(){
+  const score = healthScore();
+  const open=(bridgeState.tasks||[]).filter(t=>!t.done).length;
+  const habitsDone=(habitData.health||[]).reduce((a,h)=>a+h.days.reduce((x,y)=>x+y,0),0);
+  const reminderItems = remindersState.items || [];
+  const doneCount = reminderItems.filter(r => r.completed || r.isCompleted).length;
+  const habitNames = ['8 hours of rest','60 squats','pushups','45 pushups','50 pushups','Daily Devotional','20 minute quality time'];
+  const habitMatches = reminderItems.filter(r => {
+    const t = String(r.title || '').toLowerCase();
+    return habitNames.some(h => t.includes(h.toLowerCase()));
+  });
+  const habitDoneCount = habitMatches.filter(r => r.completed || r.isCompleted).length;
+  document.getElementById('top-panels').innerHTML = `
+    <div class="card"><div class="card-h">This Week's Big 3 <span class="badge b-blue">Execution</span></div>
+      <div class="big3-item"><span>1) Implement cash-secured put selling strategy</span><span class="badge b-red">Equities</span></div>
+      <div class="big3-item"><span>2) Hit daily health stack (rest/squats/pushups)</span><span class="badge b-green">Health</span></div>
+      <div class="big3-item"><span>3) Move highest-ROI capital action forward</span><span class="badge b-red">Finance</span></div>
+    </div>
+    <div class="card"><div class="card-h">30-day Trends <span class="badge b-gray">Snapshot</span></div>
+      <div class="trend-row"><span>Health score</span><span>${score ?? 'NA'}</span></div><div class="spark"><span style="width:${score ?? 35}%"></span></div>
+      <div class="trend-row"><span>Open tasks</span><span>${open}</span></div><div class="spark"><span style="width:${Math.max(5,100-open*15)}%;background:#854F0B"></span></div>
+      <div class="trend-row"><span>Habit checkmarks</span><span>${habitDoneCount ?? habitsDone}</span></div><div class="spark"><span style="width:${Math.min(100,(habitDoneCount ?? habitsDone)*12)}%;background:#0F6E56"></span></div>
+    </div>
+    `;
+}
+
+function openKpi(mission,label,value,sub){
+  document.getElementById('drawer-title').textContent = `${missions.find(m=>m.id===mission)?.label || mission} · ${label}`;
+  document.getElementById('drawer-sub').textContent = sub;
+  document.getElementById('drawer-body').innerHTML = `<div><b>Current state:</b> ${value}</div><div style='margin-top:8px'><b>Next action:</b> Define one measurable weekly action and one monthly milestone for this sub-mission.</div>`;
+  document.getElementById('kpi-drawer').classList.add('open');
+}
+function openSettings(){
+  document.getElementById('drawer-title').textContent = 'Ops Hub · Roadmap & Change Control';
+  document.getElementById('drawer-sub').textContent = 'Operational telemetry, change discipline, and next build items';
+  document.getElementById('drawer-body').innerHTML = getRoadmapSection();
+  document.getElementById('kpi-drawer').classList.add('open');
+}
+function closeDrawer(e){ if(e.target.id==='kpi-drawer') document.getElementById('kpi-drawer').classList.remove('open'); }
+
+function renderTiles() {
+ document.getElementById('mission-tiles').innerHTML = missions.map(m => `<div class="mission-tile ${m.id===activeMission?'active':''}" style="${m.id===activeMission?`border-color:${m.color};background:${m.bg};`:''}" onclick="switchMission('${m.id}')"><div class="mt-icon">${m.icon}</div><div class="mt-num">M${m.num}</div><div class="mt-label">${m.label}</div><div class="mt-bar"><div class="mt-fill" style="width:${m.score}%;background:${m.color};"></div></div><div class="mt-status" style="color:${m.score>=70?'#1D9E75':m.score>=50?'#BA7517':'#E24B4A'}">${m.score>=70?'On track':m.score>=50?'Attention':'Build'}</div></div>`).join('');
+}
+
+function renderSection(id) {
+ const sec = document.getElementById('sec-'+id);
+ const m = missions.find(x=>x.id===id);
+ if (sec && m) sec.innerHTML = buildSection(m);
+}
+
+function switchMission(id) {
+ activeMission = id;
+ renderTiles();
+ document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+ document.getElementById('sec-'+id).classList.add('active');
+ renderTopPanels();
+}
+
+function buildSections() {
+ const container = document.getElementById('sections');
+ container.innerHTML = '';
+ missions.forEach(m => {
+   const div = document.createElement('div');
+   div.className = 'section' + (m.id===activeMission?' active':'');
+   div.id = 'sec-'+m.id;
+   div.innerHTML = buildSection(m);
+   container.appendChild(div);
+ });
+}
+
+async function sendChat(id) {
+ const inp = document.getElementById('inp-'+id);
+ const text = inp.value.trim();
+ if (!text) return;
+ inp.value = '';
+ const chat = document.getElementById('chat-'+id);
+ const d = document.createElement('div');
+ d.className = 'msg user';
+ d.innerHTML = `<div class="av user">You</div><div class="bubble user">${text}</div>`;
+ chat.appendChild(d);
+ const r = document.createElement('div');
+ r.className = 'msg';
+ r.innerHTML = `<div class="av ai">OS</div><div class="bubble ai">Bridge connected.</div>`;
+ chat.appendChild(r);
+ chat.scrollTop = 9999;
+}
+
+function bridgeApiUrl() {
+  const h = window.location.hostname || 'localhost';
+  return `http://${h}:8790/api/state`;
+}
+
+async function refreshRemindersState() {
+  try {
+    const url = bridgeApiUrl().replace('/api/state', '/api/reminders/today');
+    const res = await fetch(url, { cache:'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    remindersState = await res.json();
+  } catch {
+    remindersState = { ok:false, items:[] };
+  }
+}
+
+let refreshInFlight = false;
+
+async function refreshBridgeState() {
+ if (refreshInFlight) return;
+ refreshInFlight = true;
+ try {
+   try {
+     const res = await fetch(bridgeApiUrl(), { cache:'no-store' });
+     if (!res.ok) throw new Error('HTTP ' + res.status);
+     bridgeState = await res.json();
+     document.getElementById('sync-state').textContent = 'Live';
+     document.getElementById('sync-state').className = 'badge b-teal';
+   } catch (e) {
+     document.getElementById('sync-state').textContent = 'Offline';
+     document.getElementById('sync-state').className = 'badge b-red';
+   }
+   await refreshRemindersState();
+   syncHabitsFromReminders();
+   buildSections();
+   renderTiles();
+   renderTopPanels();
+ } finally {
+   refreshInFlight = false;
+ }
+}
+
+const d = new Date();
+const weekNum = Math.ceil((((d - new Date(d.getFullYear(),0,1))/86400000)+1)/7);
+document.getElementById('masthead-date').textContent = `Age 51 · ${d.toLocaleDateString('en-US',{month:'long',year:'numeric'})}`;
+document.getElementById('masthead-day').textContent = d.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+document.getElementById('week-num').textContent = `Week ${weekNum} of 52`;
+
+const REFRESH_MS = 5000;
+refreshBridgeState();
+setInterval(refreshBridgeState, REFRESH_MS);
+window.addEventListener('focus', refreshBridgeState);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) refreshBridgeState();
+});
+</script>
+</body>
+</html>
