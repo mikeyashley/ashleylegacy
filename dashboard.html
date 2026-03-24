@@ -203,7 +203,6 @@ body{ font-family:var(--font-sans); background:var(--color-background-primary); 
   </div>
 
   <div class="mission-grid" id="mission-tiles"></div>
-  <div class="top-panels" id="top-panels"></div>
   <div id="sections"></div>
 </div>
 <button class="settings-fab" onclick="openSettings()" title="Ops Hub">⚙ Ops Hub</button>
@@ -431,7 +430,7 @@ function buildSection(m) {
  const c = m.color;
  const scoreColor = m.score>=70 ? '#1D9E75' : m.score>=50 ? '#BA7517' : '#E24B4A';
  const taglineClass = m.id==='legacy' ? 'mission-head-tagline legacy' : 'mission-head-tagline';
- return `<div class="mission-head"><span class="mission-head-icon">${m.icon}</span><div><div class="mission-head-title">Mission ${m.num} — ${m.label}</div><div class="${taglineClass}">${getMissionTagline(m.id)}</div></div><div class="mission-score" style="color:${scoreColor}">${m.score}% on track</div></div>${getMissionStatement(m.id)}${getKPIStrip(m.id)}${getSignals(m.id)}${habitData[m.id] ? getHabits(m.id, c) : ''}`;
+ const topPanels = m.id==='legacy' ? getTopPanelsHTML() : ''; return `<div class="mission-head"><span class="mission-head-icon">${m.icon}</span><div><div class="mission-head-title">Mission ${m.num} — ${m.label}</div><div class="${taglineClass}">${getMissionTagline(m.id)}</div></div><div class="mission-score" style="color:${scoreColor}">${m.score}% on track</div></div>${getMissionStatement(m.id)}${getKPIStrip(m.id)}${getSignals(m.id)}${habitData[m.id] ? getHabits(m.id, c) : ''}${topPanels}`;
 }
 
 function healthScore(){
@@ -444,7 +443,7 @@ function healthScore(){
   return n?Math.round(s/n):null;
 }
 
-function renderTopPanels(){
+function getTopPanelsHTML(){
   const score = healthScore();
   const open=(bridgeState.tasks||[]).filter(t=>!t.done).length;
   const habitsDone=(habitData.health||[]).reduce((a,h)=>a+h.days.reduce((x,y)=>x+y,0),0);
@@ -567,7 +566,6 @@ async function refreshBridgeState() {
    syncHabitsFromReminders();
    buildSections();
    renderTiles();
-   renderTopPanels();
  } finally {
    refreshInFlight = false;
  }
