@@ -308,8 +308,27 @@ function getMissionTagline(id) {
 }
 
 function getMissionStatement(id) {
-  if (id !== 'legacy') return '';
-  return `<div class="card"><div class="card-h">Family Mission Statement <span class="badge b-purple">Draft</span></div><div style="line-height:1.45;color:var(--color-text-primary);font-size:13px">We are building a multigenerational family legacy rooted in faith, character, wisdom, and stewardship.<br><br>We choose what is right over what is easy, grow stronger through discipline and learning, and protect one another with love, responsibility, and resilience.<br><br>We steward our health, relationships, resources, and opportunities so each generation is better prepared to serve, lead, and thrive.<br><br>Our home is a place of trust, gratitude, and purpose—where we honor God, care deeply for each other, and leave a meaningful foundation for those who come after us.</div></div>`;
+  const statements = {
+    legacy: `We are building a multigenerational family legacy rooted in faith, character, wisdom, and stewardship.<br><br>We choose what is right over what is easy, grow stronger through discipline and learning, and protect one another with love, responsibility, and resilience.<br><br>We steward our health, relationships, resources, and opportunities so each generation is better prepared to serve, lead, and thrive.<br><br>Our home is a place of trust, gratitude, and purpose—where we honor God, care deeply for each other, and leave a meaningful foundation for those who come after us.`,
+    health: `Maintain excellent personal health — strength, longevity, and energy at every decade. Target 160 lbs, functional strength, and endurance built through consistent daily habits. Health is the foundation all other missions run on.`,
+    marriage: `Maintain a healthy, intentional marriage built on trust, communication, and shared purpose. Invest in daily rituals, repair loops, and protecting the partnership that anchors the family.`,
+    lily: `Support Lily's physical, emotional, and intellectual development during her most formative years. Be present, engaged, and intentional. The first 5 years compound harder than any investment.`,
+    networth: `Grow net worth 15% per year — baseline $5,779,295 (Dec 2025). Build toward $20M by age 60 through disciplined compounding in real estate, equities, and digital businesses.`,
+    restate: `Keep real estate holdings optimized and cash-flowing. Execute renovations on time and on budget. Maintain occupancy, upgrade asset quality, and build the BTR pipeline for 2027+.`,
+    equities: `Keep cash and equities working at maximum efficiency. Protect SPY core positions, activate income through options, and manage the retirement account as a disciplined risk-on allocation band.`,
+  };
+  const badges = {
+    legacy: '<span class="badge b-purple">Draft</span>',
+    health: '<span class="badge b-teal">Active</span>',
+    marriage: '<span class="badge b-teal">Active</span>',
+    lily: '<span class="badge b-green">Active</span>',
+    networth: '<span class="badge b-blue">Active</span>',
+    restate: '<span class="badge b-amber">Active</span>',
+    equities: '<span class="badge b-blue">Active</span>',
+  };
+  const txt = statements[id];
+  if (!txt) return '';
+  return `<div class="card"><div class="card-h">Mission Statement ${badges[id]||''}</div><div style="line-height:1.55;color:var(--color-text-primary);font-size:12px">${txt}</div></div>`;
 }
 
 function getRoadmapSection() {
@@ -412,7 +431,7 @@ function buildSection(m) {
  const c = m.color;
  const scoreColor = m.score>=70 ? '#1D9E75' : m.score>=50 ? '#BA7517' : '#E24B4A';
  const taglineClass = m.id==='legacy' ? 'mission-head-tagline legacy' : 'mission-head-tagline';
- return `<div class="mission-head"><span class="mission-head-icon">${m.icon}</span><div><div class="mission-head-title">Mission ${m.num} — ${m.label}</div><div class="${taglineClass}">${getMissionTagline(m.id)}</div></div><div class="mission-score" style="color:${scoreColor}">${m.score}% on track</div></div>${getKPIStrip(m.id)}${getSignals(m.id)}${habitData[m.id] ? getHabits(m.id, c) : ''}${getMissionStatement(m.id)}`;
+ return `<div class="mission-head"><span class="mission-head-icon">${m.icon}</span><div><div class="mission-head-title">Mission ${m.num} — ${m.label}</div><div class="${taglineClass}">${getMissionTagline(m.id)}</div></div><div class="mission-score" style="color:${scoreColor}">${m.score}% on track</div></div>${getMissionStatement(m.id)}${getKPIStrip(m.id)}${getSignals(m.id)}${habitData[m.id] ? getHabits(m.id, c) : ''}`;
 }
 
 function healthScore(){
