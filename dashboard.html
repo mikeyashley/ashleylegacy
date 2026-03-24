@@ -455,7 +455,7 @@ function getTopPanelsHTML(){
     return habitNames.some(h => t.includes(h.toLowerCase()));
   });
   const habitDoneCount = habitMatches.filter(r => r.completed || r.isCompleted).length;
-  document.getElementById('top-panels').innerHTML = `
+  return `<div class="top-panels">
     <div class="card"><div class="card-h">This Week's Big 3 <span class="badge b-blue">Execution</span></div>
       <div class="big3-item"><span>1) Implement cash-secured put selling strategy</span><span class="badge b-red">Equities</span></div>
       <div class="big3-item"><span>2) Hit daily health stack (rest/squats/pushups)</span><span class="badge b-green">Health</span></div>
@@ -466,7 +466,7 @@ function getTopPanelsHTML(){
       <div class="trend-row"><span>Open tasks</span><span>${open}</span></div><div class="spark"><span style="width:${Math.max(5,100-open*15)}%;background:#854F0B"></span></div>
       <div class="trend-row"><span>Habit checkmarks</span><span>${habitDoneCount ?? habitsDone}</span></div><div class="spark"><span style="width:${Math.min(100,(habitDoneCount ?? habitsDone)*12)}%;background:#0F6E56"></span></div>
     </div>
-    `;
+    </div>`;
 }
 
 function openKpi(mission,label,value,sub){
@@ -498,7 +498,7 @@ function switchMission(id) {
  renderTiles();
  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
  document.getElementById('sec-'+id).classList.add('active');
- renderTopPanels();
+
 }
 
 function buildSections() {
